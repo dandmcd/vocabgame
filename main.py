@@ -1,124 +1,130 @@
 import sys
 import json
-import pprint
-from types import SimpleNamespace
 import random
-from random import randint, shuffle
-from dataclasses import dataclass
-from typing import List
 
-
-# vocab = {
-#     "grandiose": {
-#       "id": 1,
-#       "answer": "characterized by affectation of splendor or by exaggeration"
-#     },
-#     "facsimile": {
-#       "id": 2,
-#       "answer": "an exact copy"
-#     },
-#     "mawkish": {
-#       "id": 3,
-#       "answer": "exaggeratedly or childishly emotional"
-#     },
-#     "sophia": {
-#       "id": 4,
-#       "answer": "divine wisdom"
-#     },
-#     "conciliate": {
-#       "id": 5,
-#       "answer": "to make more friendly or less angry"
-#     },
-#     "panache": {
-#       "id": 6,
-#       "answer": "dash or flamboyance in style and action"
-#     },
-#     "assiduous": {
-#       "id": 7,
-#       "answer": "showing great care, attention, and effort"
-#     },
-#     "adjure": {
-#       "id": 8,
-#       "answer": "to urge or advise earnestly"
-#     },
-#     "umbrage": {
-#       "id": 9,
-#       "answer": "a feeling of being offended at what someone has said or done"
-#     },
-#     "succint": {
-#       "id": 10,
-#       "answer": "giving the gist of something without excessive words"
-#     },
-#     "germinal": {
-#       "id": 11,
-#       "answer": "containing seeds of later development"
-#     },
-#     "fauna": {
-#       "id": 12,
-#       "answer": "the animals of a given region or period considered as a whole."
-#     }
-#   }
-
-# class Word(object):
-#   def __init__(self, id, answer):
-#     self.id = id
-#     self.answer = answer
-
+#Pull the json file data and convert to a Python dictionary
 vocab = {}
-
-# with open('some.json', 'w') as f:
-#   json.dump(vocab, f)
 with open('some.json', 'r') as f:
   vocab = json.load(f)
 
+#Initialize a list that will be used to feed answers for the game to multiple functions 
+listOfAnswers = []
 
-print(vocab['sophia'])
+#Converts the vocab dict to a list to randomly shuffle the list, and create an answer list for use in the game
+def shuffleVocab():
+  count = -1
+  shuffledVocab = list(vocab.items())
+  random.shuffle(shuffledVocab)
+  shuffledDict = dict(shuffledVocab)
+  for word in shuffledDict:
+    count += 1
+    #Currently id has no usage, but could be utuilized if there was a database to store the vocabulary
+    shuffledDict[word].update(id=count)
+    listOfAnswers.append(shuffledDict[word]['answer'])
+  count = 0
+  return shuffledDict
 
+#Runs all functions pertaining to the vocab practice game
+def play_game():
+  #Clear any prior list of answers to prevent duplicates from prior games
+  listOfAnswers.clear()
+  #Variable stores all of the shuffled key value pairs for words and answers
+  shuffledDict = shuffleVocab()
+  #Score counters
+  correctCounter = 0
+  incorrectCounter = 0
+  #Track question number, which also is a param used to get the question and matching answer
+  gameCounter = 0
+  #Game loop, starts with first question and prints 4 answers
+  for word in shuffledDict:
+    print("Score:", correctCounter,"-", incorrectCounter, "\n")
+    #Game counter increases after each loop
+    gameCounter += 1
+    print("Question", gameCounter, " What is the definition for", word, "...")
+    answers = answer_shuffler(gameCounter)
+    print("(A) - ", answers[0])
+    print("(B) - ", answers[1])
+    print("(C) - ", answers[2])
+    print("(D) - ", answers[3])
+    while True:
+      response = input("Choose your answer by entering a, b, c, or d ... ")
+      if response.lower() in ("a", "b", "c", "d"):
+        if response.lower() == "a":
+          if answers[0] == shuffledDict[word]["answer"]:
+            print("\nYES, THAT IS CORRECT!!! :)\n")
+            correctCounter += 1
+            break
+          else:
+            print("\nNO,  SORRY, THAT IS NOT CORRECT! :(\n")
+            incorrectCounter += 1
+            break
+        elif response.lower() == "b":
+          if answers[1] == shuffledDict[word]["answer"]:
+            print("\nYES, THAT IS CORRECT!!! :)\n")
+            correctCounter += 1
+            break
+          else:
+            print("\nNO,  SORRY, THAT IS NOT CORRECT! :(\n")
+            incorrectCounter += 1
+            break
+        elif response.lower() == "c":
+          if answers[2] == shuffledDict[word]["answer"]:
+            print("\nYES, THAT IS CORRECT!!! :)\n")
+            correctCounter += 1
+            break
+          else:
+            print("\nNO,  SORRY, THAT IS NOT CORRECT! :(\n")
+            incorrectCounter += 1
+            break
+        elif response.lower() == "d":
+          if answers[3] == shuffledDict[word]["answer"]:
+            print("\nYES, THAT IS CORRECT!!! :)\n")
+            correctCounter += 1
+            break
+          else:
+            print("\nNO,  SORRY, THAT IS NOT CORRECT! :(\n")
+            incorrectCounter += 1
+            break
+      else:
+        print("\nNot a valid command, please try again\n")
+        continue
+  print("\nFinal Score:", correctCounter, "-", incorrectCounter)
+  print()
+  gameCounter = 0
+  start_menu()
 
-# data = json.dumps(vocab)
-# dataObj = json.loads(data)
-# dataObjList = list(data.vocab())
-# print(type(vocab))
-
-shuffledVocab = list(vocab.items())
-# print(shuffledVocab)
-random.shuffle(shuffledVocab)
-print(shuffledVocab[0])
-# shuffledDict = dict(dataObjList)
-# print(shuffledDict)
-for word in shuffledVocab:
-  print(word)
-
-# vocab["taco"] = {"answer": "yummy"}
-print(vocab)
+def answer_shuffler(gameCounter):
+  ansCount = gameCounter - 1
+  correctAnswer = ""
+  correctAnswer = listOfAnswers[ansCount]
+  randomAnswers = random.sample([i for i in listOfAnswers if i != correctAnswer], 3)
+  returnAnswers = randomAnswers
+  returnAnswers.append(correctAnswer)
+  random.shuffle(returnAnswers)
+  return returnAnswers
 
 def change_word(word, answer, update=False):
   if word in vocab and update == False:
-    response = input("Word is already on the list, do you want to update it?  Type yes to update.")
+    response = input("Word is already on the list, do you want to update it?  Type yes to update ... ")
     if response.lower() == "yes":
       vocab[word] = {"answer": answer}
-      print(vocab)
-      print("Word successfully updated!")
+      save_vocab()
+      print("\nWord successfully updated!")
     else:
       edit_menu()
   else:
     vocab[word] = {"answer": answer}
-    print(vocab)
-    print("Word successfully added!")
-    
-
-def update_word(word, answer):
-  pass
+    save_vocab()
+    print("\nWord successfully added!")
 
 
 def delete_word(word):
   if word in vocab:
-    response = input("Are you sure you want to delete {word}?  Type yes to confirm or press enter to cancel")
+    response = input(f"Are you sure you want to delete {word}?  Type yes to confirm or press enter to cancel ... ")
     if response.lower() == "yes":
       del vocab[word]
-      print(vocab)
-      print()
-      print("Word successfully deleted!")
+      save_vocab()
+      print("\nWord successfully deleted!")
       edit_menu()
     else:
       edit_menu()
@@ -126,29 +132,28 @@ def delete_word(word):
   else:
     print("I didn't find this word")
   
-
-
 def list_words():
-  # pprint.pprint(vocab)
   print(json.dumps(vocab, indent=4, sort_keys=True))
 
+def save_vocab():
+    with open('some.json', 'w') as f:
+      json.dump(vocab, f)
+
 def exit():
+  save_vocab()
   print("Goodbye")
   sys.exit()
 
-print("taco")
-print("bell pizza hell john")
-
 def edit_menu():
-  print()
-  print("EDIT MENU --- Choose what you would like to do next")
-  print("V - View a list of vocabulary words")
-  print("A - Add a word")
-  print("U - Update an existing word")
-  print("D - Delete a word")
-  print("R - Return to Main Menu")
   while True:
-    command = input("Choose a command from above")
+    print()
+    print("EDIT MENU --- Choose what you would like to do next")
+    print("V - View a list of vocabulary words")
+    print("A - Add a word")
+    print("U - Update an existing word")
+    print("D - Delete a word")
+    print("R - Return to Main Menu")
+    command = input("Choose a command from above ... ")
     if command.lower() == "v":
       list_words()
       edit_menu()
@@ -158,13 +163,23 @@ def edit_menu():
       change_word(word.lower(), answer.lower())
     elif command.lower() == "u":
       word = input("Enter in the word you would like to update  ...")
-      answer = input("Enter the answer ...")
-      change_word(word.lower(), answer.lower(), update=True)
+      if word in vocab:
+        answer = input("Enter the answer ...")
+        change_word(word.lower(), answer.lower(), update=True)
+      else:
+        response = input("Word not found, type 'add' to continue adding the word or press enter to go back to the edit menu ... ")
+        if response == "add":
+          answer = input("Enter the answer ... ")
+          change_word(word.lower(), answer.lower())
+        else:
+          edit_menu()
     elif command.lower() == "d":
-      word = input("Enter the word to delete")
+      word = input("Enter the word to delete ... ")
       delete_word(word.lower())     
     elif command.lower() == "r":
       break
+    else:
+      print("\nNot a valid command, please try again\n")
   start_menu()
 
 
@@ -177,46 +192,17 @@ def start_menu():
   print("U - Update Vocab List")
   print("E - Exit")
   while True:
-    command = input("Choose a command from above")
+    command = input("Choose a command from above ... ")
     if command.lower() == "p":
-      pass
-      #play game
+      play_game()
     elif command.lower() == "u":
       edit_menu()
     elif command.lower() == "e":
       break
     else:
-      print("Not a valid command, please try again")
+      print("\nNot a valid command, please try again\n")
       start_menu()
-  print("Exiting ...")
+  print("Saving and Exiting ...")
   exit()
 
 start_menu()
-
-# while True:
-#   command = input("Choose a command from above")
-#   if command.lower() == "p":
-#     pass
-#     #play game
-#   elif command.lower() == "u":
-#     command = input("Choose next command")
-#     if command.lower() == "v":
-#       list_words()
-#       edit_menu()
-#     elif command.lower() == "a":
-#       pass
-#       #add_word()
-#     elif command.lower() == "u":
-#       pass
-#       #add_word() - Use same function
-#     elif command.lower() == "d":
-#       pass
-#       delete_word()     
-#     elif command.lower() == "r":
-#       break
-#   elif command.lower() == "e":
-#     break
-#   else:
-#     print("Not a valid command, please try again")
-#     start_menu()
-# print("Exiting ...")
