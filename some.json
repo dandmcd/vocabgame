@@ -1,1 +1,29 @@
-{"grandiose": {"answer": "characterized by affectation of splendor or by exaggeration", "id": 6}, "facsimile": {"answer": "an exact copy", "id": 11}, "mawkish": {"answer": "exaggeratedly or childishly emotional", "id": 3}, "sophia": {"answer": "divine wisdom", "id": 2}, "conciliate": {"answer": "to make more friendly or less angry", "id": 10}, "panache": {"answer": "dash or flamboyance in style and action", "id": 9}, "assiduous": {"answer": "showing great care, attention, and effort", "id": 0}, "adjure": {"answer": "to urge or advise earnestly", "id": 4}, "umbrage": {"answer": "a feeling of being offended at what someone has said or done", "id": 7}, "succint": {"answer": "giving the gist of something without excessive words", "id": 8}, "germinal": {"answer": "containing seeds of later development", "id": 1}, "fauna": {"answer": "the animals of a given region or period considered as a whole.", "id": 5}}
+{
+  "grandiose": {
+    "answer": "characterized by affectation of splendor or by exaggeration",
+    "id": 6
+  },
+  "facsimile": { "answer": "an exact copy", "id": 11 },
+  "mawkish": { "answer": "exaggeratedly or childishly emotional", "id": 3 },
+  "sophia": { "answer": "divine wisdom", "id": 2 },
+  "conciliate": { "answer": "to make more friendly or less angry", "id": 10 },
+  "panache": { "answer": "dash or flamboyance in style and action", "id": 9 },
+  "assiduous": {
+    "answer": "showing great care, attention, and effort",
+    "id": 0
+  },
+  "adjure": { "answer": "to urge or advise earnestly", "id": 4 },
+  "umbrage": {
+    "answer": "a feeling of being offended at what someone has said or done",
+    "id": 7
+  },
+  "succint": {
+    "answer": "giving the gist of something without excessive words",
+    "id": 8
+  },
+  "germinal": { "answer": "containing seeds of later development", "id": 1 },
+  "fauna": {
+    "answer": "the animals of a given region or period considered as a whole.",
+    "id": 5
+  }
+}

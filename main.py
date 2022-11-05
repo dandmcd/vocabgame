@@ -46,6 +46,8 @@ def play_game():
     print("(B) - ", answers[1])
     print("(C) - ", answers[2])
     print("(D) - ", answers[3])
+    #Prompts for key input, checks answer, and returns the result and updates the score
+    #If abcd are not chosen, loops back and asks again
     while True:
       response = input("Choose your answer by entering a, b, c, or d ... ")
       if response.lower() in ("a", "b", "c", "d"):
@@ -90,19 +92,24 @@ def play_game():
         continue
   print("\nFinal Score:", correctCounter, "-", incorrectCounter)
   print()
+  #Reset game counter and return user back to the start menu after game is complete
   gameCounter = 0
   start_menu()
 
+#For each question, function picks 3 random answers and the correct answer and returns the list of 4 answers
 def answer_shuffler(gameCounter):
   ansCount = gameCounter - 1
   correctAnswer = ""
+  #Use the game counter to pull the correct answer from the ordered list
   correctAnswer = listOfAnswers[ansCount]
+  #Loop through the samples to ensure no duplicates are chosen.
   randomAnswers = random.sample([i for i in listOfAnswers if i != correctAnswer], 3)
   returnAnswers = randomAnswers
   returnAnswers.append(correctAnswer)
   random.shuffle(returnAnswers)
   return returnAnswers
 
+#Add or update the vocab list
 def change_word(word, answer, update=False):
   if word in vocab and update == False:
     response = input("Word is already on the list, do you want to update it?  Type yes to update ... ")
@@ -117,7 +124,7 @@ def change_word(word, answer, update=False):
     save_vocab()
     print("\nWord successfully added!")
 
-
+#Deletes word from vocab list
 def delete_word(word):
   if word in vocab:
     response = input(f"Are you sure you want to delete {word}?  Type yes to confirm or press enter to cancel ... ")
@@ -132,18 +139,22 @@ def delete_word(word):
   else:
     print("I didn't find this word")
   
+#Provides a list of all vocabulary and answers on the list
 def list_words():
   print(json.dumps(vocab, indent=4, sort_keys=True))
 
+#Saves list to the original JSON file
 def save_vocab():
     with open('some.json', 'w') as f:
       json.dump(vocab, f)
 
+#Save and exit the program
 def exit():
   save_vocab()
   print("Goodbye")
   sys.exit()
 
+#The Edit menu allows user to view, add, update or delete
 def edit_menu():
   while True:
     print()
@@ -182,7 +193,7 @@ def edit_menu():
       print("\nNot a valid command, please try again\n")
   start_menu()
 
-
+#The main menu that comes up at the start of the program, with practice/play, update and exit options.
 def start_menu():
   print()
   print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
@@ -205,4 +216,5 @@ def start_menu():
   print("Saving and Exiting ...")
   exit()
 
+#Begins the program
 start_menu()
